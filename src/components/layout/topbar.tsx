@@ -22,23 +22,23 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/teams", label: "Teams", icon: Users },
-  { href: "/players", label: "Players", icon: UserCircle },
-  { href: "/seasons", label: "Seasons", icon: Calendar },
-  { href: "/games", label: "Games", icon: Trophy },
-  { href: "/uploads", label: "Uploads", icon: Upload },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard", label: "Panel", icon: LayoutDashboard },
+  { href: "/teams", label: "Equipos", icon: Users },
+  { href: "/players", label: "Jugadores", icon: UserCircle },
+  { href: "/seasons", label: "Temporadas", icon: Calendar },
+  { href: "/games", label: "Partidos", icon: Trophy },
+  { href: "/uploads", label: "Subidas", icon: Upload },
+  { href: "/Estadísticas", label: "Estadísticas", icon: BarChart3 },
 ];
 
 const pageTitles: Record<string, string> = {
-  "/dashboard": "Dashboard",
-  "/teams": "Teams",
-  "/players": "Players",
-  "/seasons": "Seasons",
-  "/games": "Games",
-  "/uploads": "Uploads",
-  "/analytics": "Analytics",
+  "/dashboard": "Panel",
+  "/teams": "Equipos",
+  "/players": "Jugadores",
+  "/seasons": "Temporadas",
+  "/games": "Partidos",
+  "/uploads": "Subidas",
+  "/Estadísticas": "Estadísticas",
 };
 
 function getPageTitle(pathname: string): string {
@@ -58,14 +58,16 @@ export function Topbar() {
       {/* Mobile Menu */}
       <div className="lg:hidden">
         <Sheet>
-          <SheetTrigger render={
-            <Button variant="ghost" size="icon" className="shrink-0">
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          } />
+          <SheetTrigger
+            render={
+              <Button variant="ghost" size="icon" className="shrink-0">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Abrir menú</span>
+              </Button>
+            }
+          />
           <SheetContent side="left" className="w-[280px] p-0">
-            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            <SheetTitle className="sr-only">Menú de Navegación</SheetTitle>
             <div className="flex h-16 items-center gap-3 border-b border-border px-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <CircleDot className="h-5 w-5" />
@@ -75,7 +77,7 @@ export function Topbar() {
                   CourtVision
                 </span>
                 <span className="text-[11px] text-muted-foreground">
-                  Analytics
+                  Estadísticas
                 </span>
               </div>
             </div>
@@ -93,7 +95,7 @@ export function Topbar() {
                       "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                       isActive
                         ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
                   >
                     <Icon className="h-[18px] w-[18px]" />

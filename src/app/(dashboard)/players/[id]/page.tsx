@@ -33,12 +33,12 @@ export default function PlayerDetailPage({
         <Link href="/players">
           <Button variant="ghost" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to Players
+            Volver a Jugadores
           </Button>
         </Link>
         <EmptyState
-          title="Player not found"
-          description="The player you're looking for doesn't exist."
+          title="Jugador no encontrado"
+          description="El jugador que buscas no existe."
         />
       </div>
     );
@@ -61,11 +61,11 @@ export default function PlayerDetailPage({
   ];
 
   const statCards = [
-    { label: "Points", value: player.stats.pointsPerGame, suffix: "PPG" },
-    { label: "Rebounds", value: player.stats.reboundsPerGame, suffix: "RPG" },
-    { label: "Assists", value: player.stats.assistsPerGame, suffix: "APG" },
-    { label: "Steals", value: player.stats.stealsPerGame, suffix: "SPG" },
-    { label: "Blocks", value: player.stats.blocksPerGame, suffix: "BPG" },
+    { label: "Puntos", value: player.stats.pointsPerGame, suffix: "PPG" },
+    { label: "Rebotes", value: player.stats.reboundsPerGame, suffix: "RPG" },
+    { label: "Asistencias", value: player.stats.assistsPerGame, suffix: "APG" },
+    { label: "Robos", value: player.stats.stealsPerGame, suffix: "SPG" },
+    { label: "Bloqueos", value: player.stats.blocksPerGame, suffix: "BPG" },
     {
       label: "FG%",
       value: player.stats.fieldGoalPercentage,
@@ -75,7 +75,7 @@ export default function PlayerDetailPage({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex items-center gap-4">
         <Link href="/players">
           <Button variant="ghost" size="icon">
@@ -94,14 +94,14 @@ export default function PlayerDetailPage({
               {player.firstName} {player.lastName}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {team?.name ?? "Unknown Team"} · {player.position} ·{" "}
-              {player.height} · {player.weight} lbs · Age {player.age}
+              {team?.name ?? "Equipo Desconocido"} · {player.position} ·{" "}
+              {player.height} · {player.weight} kg · Edad {player.age}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Stat Cards */}
+      {/* Tarjetas de estadísticas */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {statCards.map((stat) => (
           <Card
@@ -119,11 +119,11 @@ export default function PlayerDetailPage({
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Gráficos */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">Per Game Averages</CardTitle>
+            <CardTitle className="text-base">Promedios por Partido</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -150,7 +150,7 @@ export default function PlayerDetailPage({
 
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">Shooting Percentages</CardTitle>
+            <CardTitle className="text-base">Porcentajes de Tiro</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -176,27 +176,27 @@ export default function PlayerDetailPage({
         </Card>
       </div>
 
-      {/* Detailed Stats */}
+      {/* Estadísticas detalladas */}
       <Card className="border border-border bg-card shadow-sm">
         <CardHeader>
-          <CardTitle className="text-base">Season Averages</CardTitle>
+          <CardTitle className="text-base">Promedios de Temporada</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <p className="text-sm text-muted-foreground">Games Played</p>
+              <p className="text-sm text-muted-foreground">Partidos Jugados</p>
               <p className="mt-1 text-xl font-bold">
                 {player.stats.gamesPlayed}
               </p>
             </div>
             <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <p className="text-sm text-muted-foreground">Minutes Per Game</p>
+              <p className="text-sm text-muted-foreground">Minutos por Partido</p>
               <p className="mt-1 text-xl font-bold">
                 {player.stats.minutesPerGame}
               </p>
             </div>
             <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <p className="text-sm text-muted-foreground">Turnovers</p>
+              <p className="text-sm text-muted-foreground">Pérdidas</p>
               <p className="mt-1 text-xl font-bold">
                 {player.stats.turnoversPerGame}
               </p>

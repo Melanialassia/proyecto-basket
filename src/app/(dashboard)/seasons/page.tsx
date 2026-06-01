@@ -61,10 +61,10 @@ export default function SeasonsPage() {
   const onSubmit = (data: SeasonSchemaType) => {
     if (editingSeason) {
       updateSeason(editingSeason.id, data);
-      toast.success("Season updated");
+      toast.success("Temporada actualizada");
     } else {
       addSeason(data);
-      toast.success("Season created");
+      toast.success("Temporada creada");
     }
     setDialogOpen(false);
     form.reset();
@@ -76,9 +76,9 @@ export default function SeasonsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Seasons"
-        description="Manage basketball seasons"
-        actionLabel="Add Season"
+        title="Temporadas"
+        description="Gestiona las temporadas de baloncesto"
+        actionLabel="Agregar Temporada"
         actionIcon={Plus}
         onAction={openCreate}
       />
@@ -86,12 +86,12 @@ export default function SeasonsPage() {
       {seasons.length === 0 ? (
         <EmptyState
           icon={Calendar}
-          title="No seasons"
-          description="Create your first season to start tracking games."
+          title="Sin temporadas"
+          description="Crea tu primera temporada para empezar a registrar partidos."
         >
           <Button onClick={openCreate} className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Season
+            Agregar Temporada
           </Button>
         </EmptyState>
       ) : (
@@ -140,20 +140,20 @@ export default function SeasonsPage() {
         </div>
       )}
 
-      {/* Create/Edit Dialog */}
+      {/* Diálogo Crear/Editar */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle>
-              {editingSeason ? "Edit Season" : "Crear Temporada"}
+              {editingSeason ? "Editar Temporada" : "Crear Temporada"}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label>Season Name</Label>
+              <Label>Nombre de la Temporada</Label>
               <Input
                 {...form.register("name")}
-                placeholder="2024-2025 Regular Season"
+                placeholder="2024-2025 Temporada Regular"
               />
               {form.formState.errors.name && (
                 <p className="text-xs text-destructive">
@@ -163,7 +163,7 @@ export default function SeasonsPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Start Date</Label>
+                <Label>Fecha de Inicio</Label>
                 <Input {...form.register("startDate")} type="date" />
                 {form.formState.errors.startDate && (
                   <p className="text-xs text-destructive">
@@ -172,7 +172,7 @@ export default function SeasonsPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>End Date</Label>
+                <Label>Fecha de Fin</Label>
                 <Input {...form.register("endDate")} type="date" />
                 {form.formState.errors.endDate && (
                   <p className="text-xs text-destructive">
@@ -189,7 +189,7 @@ export default function SeasonsPage() {
                 className="h-4 w-4 rounded border-border"
               />
               <Label htmlFor="isActive" className="text-sm font-normal">
-                Active season
+                Temporada activa
               </Label>
             </div>
             <DialogFooter>
@@ -198,10 +198,10 @@ export default function SeasonsPage() {
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit">
-                {editingSeason ? "Update" : "Create"}
+                {editingSeason ? "Actualizar" : "Crear"}
               </Button>
             </DialogFooter>
           </form>

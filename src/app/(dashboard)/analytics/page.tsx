@@ -1,12 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  BarChart3,
-  TrendingUp,
-  Users,
-  Trophy,
-} from "lucide-react";
+import { BarChart3, TrendingUp, Users, Trophy } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -46,7 +41,14 @@ import { usePlayersStore } from "@/store/players";
 import { useGamesStore } from "@/store/games";
 import { getWinPercentage } from "@/lib/utils";
 
-const CHART_COLORS = ["#2563EB", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#06B6D4"];
+const CHART_COLORS = [
+  "#2563EB",
+  "#10B981",
+  "#F59E0B",
+  "#8B5CF6",
+  "#EC4899",
+  "#06B6D4",
+];
 
 const tooltipStyle = {
   contentStyle: {
@@ -57,7 +59,7 @@ const tooltipStyle = {
   },
 };
 
-export default function AnalyticsPage() {
+export default function EstadísticasPage() {
   const teams = useTeamsStore((s) => s.teams);
   const players = usePlayersStore((s) => s.players);
   const games = useGamesStore((s) => s.games);
@@ -82,10 +84,8 @@ export default function AnalyticsPage() {
   const avgRPG =
     filteredPlayers.length > 0
       ? (
-          filteredPlayers.reduce(
-            (sum, p) => sum + p.stats.reboundsPerGame,
-            0
-          ) / filteredPlayers.length
+          filteredPlayers.reduce((sum, p) => sum + p.stats.reboundsPerGame, 0) /
+          filteredPlayers.length
         ).toFixed(1)
       : "0";
 
@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
       ? (
           filteredPlayers.reduce(
             (sum, p) => sum + p.stats.fieldGoalPercentage,
-            0
+            0,
           ) / filteredPlayers.length
         ).toFixed(1)
       : "0";
@@ -149,7 +149,7 @@ export default function AnalyticsPage() {
       acc[player.position] = (acc[player.position] || 0) + 1;
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
   const positionData = Object.entries(positionCounts).map(([name, value]) => ({
     name,
@@ -165,15 +165,22 @@ export default function AnalyticsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <PageHeader
-          title="Analytics"
-          description="Team and player performance insights"
+          title="Estadísticas"
+          description="Análisis del rendimiento del equipo y de los jugadores"
         />
-        <Select value={selectedTeam} onValueChange={(val) => setSelectedTeam(val ?? "all")}>
+        <Select
+          value={selectedTeam}
+          onValueChange={(val) => setSelectedTeam(val ?? "all")}
+        >
           <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Filter by team" />
+            <SelectValue placeholder="Todos">
+              {selectedTeam === "all"
+                ? "Todos"
+                : (teams.find((t) => t.id === selectedTeam)?.name ?? "Todos")}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Teams</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             {teams.map((team) => (
               <SelectItem key={team.id} value={team.id}>
                 {team.name}
@@ -186,28 +193,29 @@ export default function AnalyticsPage() {
       {/* KPI Cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
-          title="Avg Points/Game"
+          title="Puntos promedio por partido"
           value={avgPPG}
           change={5.2}
           changeLabel="vs el mes pasado"
           icon={TrendingUp}
         />
         <KPICard
-          title="Avg Rebounds/Game"
+          title="Promedio de rebotes por partido"
           value={avgRPG}
           change={3.1}
           changeLabel="vs el mes pasado"
           icon={BarChart3}
         />
         <KPICard
-          title="Avg Assists/Game"
+          title="Asistencias promedio por partido"
           value={avgAPG}
           change={2.8}
           changeLabel="vs el mes pasado"
           icon={Users}
         />
         <KPICard
-          title="Avg FG%"
+          title="Promedio FG%
+"
           value={`${avgFG}%`}
           change={1.5}
           changeLabel="vs el mes pasado"
@@ -220,7 +228,7 @@ export default function AnalyticsPage() {
         {/* Scoring Trends */}
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">Scoring Trends</CardTitle>
+            <CardTitle className="text-base">Tendencias de Puntuación</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -260,7 +268,7 @@ export default function AnalyticsPage() {
         {/* Team Comparison */}
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">Team Comparison</CardTitle>
+            <CardTitle className="text-base">Comparación de Equipos</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -284,7 +292,7 @@ export default function AnalyticsPage() {
         {/* Pie Chart */}
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">Position Distribution</CardTitle>
+            <CardTitle className="text-base">Distribución por Posición</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
@@ -315,7 +323,7 @@ export default function AnalyticsPage() {
         {/* Top Scorers Table */}
         <Card className="border border-border bg-card shadow-sm lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-base">Top Scorers</CardTitle>
+            <CardTitle className="text-base">Máximos Anotadores</CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="players">
@@ -338,9 +346,7 @@ export default function AnalyticsPage() {
                   </TableHeader>
                   <TableBody>
                     {topScorers.map((player, i) => {
-                      const team = teams.find(
-                        (t) => t.id === player.teamId
-                      );
+                      const team = teams.find((t) => t.id === player.teamId);
                       return (
                         <TableRow key={player.id}>
                           <TableCell className="text-muted-foreground">
@@ -351,8 +357,7 @@ export default function AnalyticsPage() {
                               <div
                                 className="flex h-6 w-6 items-center justify-center rounded text-[8px] font-bold text-white"
                                 style={{
-                                  backgroundColor:
-                                    team?.logoColor ?? "#94A3B8",
+                                  backgroundColor: team?.logoColor ?? "#94A3B8",
                                 }}
                               >
                                 {team?.abbreviation}
@@ -388,9 +393,9 @@ export default function AnalyticsPage() {
                       <TableHead>Equipo</TableHead>
                       <TableHead className="text-center">V</TableHead>
                       <TableHead className="text-center">D</TableHead>
-                      <TableHead className="text-center">Win%</TableHead>
+                      <TableHead className="text-center">% Vic</TableHead>
                       <TableHead className="text-center">Jugadores</TableHead>
-                      <TableHead className="text-center">Avg PPG</TableHead>
+                      <TableHead className="text-center">Prom PPG</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -398,18 +403,18 @@ export default function AnalyticsPage() {
                       .sort(
                         (a, b) =>
                           b.wins / (b.wins + b.losses || 1) -
-                          a.wins / (a.wins + a.losses || 1)
+                          a.wins / (a.wins + a.losses || 1),
                       )
                       .map((team) => {
                         const teamPlayers = players.filter(
-                          (p) => p.teamId === team.id
+                          (p) => p.teamId === team.id,
                         );
                         const avgPts =
                           teamPlayers.length > 0
                             ? (
                                 teamPlayers.reduce(
                                   (sum, p) => sum + p.stats.pointsPerGame,
-                                  0
+                                  0,
                                 ) / teamPlayers.length
                               ).toFixed(1)
                             : "0.0";
@@ -425,9 +430,7 @@ export default function AnalyticsPage() {
                                 >
                                   {team.abbreviation}
                                 </div>
-                                <span className="font-medium">
-                                  {team.name}
-                                </span>
+                                <span className="font-medium">{team.name}</span>
                               </div>
                             </TableCell>
                             <TableCell className="text-center font-medium text-emerald-600">

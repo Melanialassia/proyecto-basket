@@ -52,7 +52,11 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { useGamesStore } from "@/store/games";
 import { useTeamsStore } from "@/store/teams";
 import { useSeasonsStore } from "@/store/seasons";
-import { gameSchema, type GameSchemaType, type GameFormInput } from "@/lib/schemas";
+import {
+  gameSchema,
+  type GameSchemaType,
+  type GameFormInput,
+} from "@/lib/schemas";
 import { formatDate } from "@/lib/utils";
 import type { Game } from "@/types";
 
@@ -92,7 +96,7 @@ export default function GamesPage() {
   });
 
   const sortedGames = [...filteredGames].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
   const openCreate = () => {
@@ -126,12 +130,14 @@ export default function GamesPage() {
   const onSubmit = (data: GameSchemaType) => {
     if (editingGame) {
       const status =
-        data.homeScore > 0 || data.awayScore > 0 ? "completado" : editingGame.status;
+        data.homeScore > 0 || data.awayScore > 0
+          ? "completado"
+          : editingGame.status;
       updateGame(editingGame.id, { ...data, status });
-      toast.success("Game updated");
+      toast.success("Partido actualizado");
     } else {
       addGame(data);
-      toast.success("Game created");
+      toast.success("Partido creado");
     }
     setDialogOpen(false);
     form.reset();
@@ -146,16 +152,16 @@ export default function GamesPage() {
   };
 
   const getTeamName = (teamId: string) =>
-    teams.find((t) => t.id === teamId)?.name ?? "Unknown";
+    teams.find((t) => t.id === teamId)?.name ?? "Desconocido";
   const getTeamAbbr = (teamId: string) =>
     teams.find((t) => t.id === teamId)?.abbreviation ?? "???";
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Games"
-        description="Schedule and track basketball games"
-        actionLabel="Add Game"
+        title="Partidos"
+        description="Programa y registra partidos de baloncesto"
+        actionLabel="Agregar Partido"
         actionIcon={Plus}
         onAction={openCreate}
       />
@@ -166,18 +172,30 @@ export default function GamesPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search games..."
+              placeholder="Buscar partidos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
             />
           </div>
-          <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val ?? "all")}>
+          <Select
+            value={statusFilter}
+            onValueChange={(val) => setStatusFilter(val ?? "all")}
+          >
             <SelectTrigger className="w-full sm:w-[160px]">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder="Todos">
+                {(
+                  {
+                    all: "Todos",
+                    programado: "Programado",
+                    en_progreso: "En Progreso",
+                    completado: "Completado",
+                  } as Record<string, string>
+                )[statusFilter] ?? "Todos"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="programado">Programado</SelectItem>
               <SelectItem value="en_progreso">En Progreso</SelectItem>
               <SelectItem value="completado">Completado</SelectItem>
@@ -189,12 +207,12 @@ export default function GamesPage() {
       {/* Table */}
       {sortedGames.length === 0 ? (
         <EmptyState
-          title="No games found"
-          description="Create your first game."
+          title="No se encontraron partidos"
+          description="Crea tu primer partido."
         >
           <Button onClick={openCreate} className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Game
+            Agregar Partido
           </Button>
         </EmptyState>
       ) : (
@@ -203,9 +221,9 @@ export default function GamesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Fecha</TableHead>
-                <TableHead>Home</TableHead>
-                <TableHead className="text-center">Score</TableHead>
-                <TableHead>Away</TableHead>
+                <TableHead>Local</TableHead>
+                <TableHead className="text-center">Marcador</TableHead>
+                <TableHead>Visitante</TableHead>
                 <TableHead>Sede</TableHead>
                 <TableHead>Estado</TableHead>
                 <TableHead className="w-[50px]" />
@@ -248,20 +266,22 @@ export default function GamesPage() {
                         }
                       />
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem render={<Link href={`/games/${game.id}`} />}>
+                        <DropdownMenuItem
+                          render={<Link href={`/games/${game.id}`} />}
+                        >
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          Ver
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openEdit(game)}>
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeleteTarget(game)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -278,7 +298,7 @@ export default function GamesPage() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>
-              {editingGame ? "Edit Game" : "Schedule Game"}
+              {editingGame ? "Editar Partido" : "Programar Partido"}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -286,12 +306,16 @@ export default function GamesPage() {
               <Label>Temporada</Label>
               <Select
                 value={form.watch("seasonId")}
-                onValueChange={(val) => { if (val) form.setValue("seasonId", val); }}
+                onValueChange={(val) => {
+                  if (val) form.setValue("seasonId", val);
+                }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select season" />
+                  <SelectValue placeholder="Seleccionar temporada">
+                    {seasons.find((s) => s.id === form.watch("seasonId"))?.name ?? "Seleccionar temporada"}
+                  </SelectValue>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent align="end" side="bottom">
                   {seasons.map((season) => (
                     <SelectItem key={season.id} value={season.id}>
                       {season.name}
@@ -305,10 +329,14 @@ export default function GamesPage() {
                 <Label>Equipo Local</Label>
                 <Select
                   value={form.watch("homeTeamId")}
-                  onValueChange={(val) => { if (val) form.setValue("homeTeamId", val); }}
+                  onValueChange={(val) => {
+                    if (val) form.setValue("homeTeamId", val);
+                  }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select team" />
+                    <SelectValue placeholder="Seleccionar equipo">
+                      {teams.find((t) => t.id === form.watch("homeTeamId"))?.name ?? "Seleccionar equipo"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {teams.map((team) => (
@@ -323,10 +351,14 @@ export default function GamesPage() {
                 <Label>Equipo Visitante</Label>
                 <Select
                   value={form.watch("awayTeamId")}
-                  onValueChange={(val) => { if (val) form.setValue("awayTeamId", val); }}
+                  onValueChange={(val) => {
+                    if (val) form.setValue("awayTeamId", val);
+                  }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select team" />
+                    <SelectValue placeholder="Seleccionar equipo">
+                      {teams.find((t) => t.id === form.watch("awayTeamId"))?.name ?? "Seleccionar equipo"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {teams.map((team) => (
@@ -380,22 +412,18 @@ export default function GamesPage() {
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                Cancelar
               </Button>
-              <Button type="submit">
-                {editingGame ? "Update" : "Schedule"}
-              </Button>
+              <Button type="submit">Guardar</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
-
-      {/* Delete Confirmation */}
       <ConfirmDialog
         open={!!deleteTarget}
         onOpenChange={() => setDeleteTarget(null)}
-        title="Delete Game"
-        description="Are you sure you want to delete this game? This action cannot be undone."
+        title="Eliminar Partido"
+        description="¿Estás seguro de que quieres eliminar este partido? Esta acción no se puede deshacer."
         onConfirm={handleDelete}
       />
     </div>

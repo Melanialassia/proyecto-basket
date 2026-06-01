@@ -12,6 +12,7 @@ import {
   BarChart3,
   ChevronLeft,
   CircleDot,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAuthStore } from "@/store/auth";
+import { useRouter } from "next/navigation";
 
 const navItems = [
   { href: "/dashboard", label: "Panel", icon: LayoutDashboard },
@@ -27,8 +30,8 @@ const navItems = [
   { href: "/players", label: "Jugadores", icon: UserCircle },
   { href: "/seasons", label: "Temporadas", icon: Calendar },
   { href: "/games", label: "Partidos", icon: Trophy },
-  { href: "/uploads", label: "Subidas", icon: Upload },
-  { href: "/analytics", label: "Análisis", icon: BarChart3 },
+  // { href: "/uploads", label: "Subidas", icon: Upload },
+  // { href: "/analytics", label: "Estadísticas", icon: BarChart3 },
 ];
 
 interface AppSidebarProps {
@@ -38,12 +41,19 @@ interface AppSidebarProps {
 
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { currentUser, logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <aside
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-border bg-card transition-all duration-300 ease-in-out",
-        collapsed ? "w-[68px]" : "w-[240px]"
+        collapsed ? "w-[68px]" : "w-[240px]",
       )}
     >
       {/* Logo */}
@@ -57,7 +67,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               CourtVision
             </span>
             <span className="truncate text-[11px] text-muted-foreground">
-              Analytics
+              Estadísticas
             </span>
           </div>
         )}
@@ -78,7 +88,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                collapsed && "justify-center px-2"
+                collapsed && "justify-center px-2",
               )}
             >
               <Icon
@@ -86,7 +96,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                   "h-[18px] w-[18px] shrink-0 transition-colors",
                   isActive
                     ? "text-primary"
-                    : "text-muted-foreground group-hover:text-foreground"
+                    : "text-muted-foreground group-hover:text-foreground",
                 )}
               />
               {!collapsed && <span className="truncate">{item.label}</span>}
@@ -108,21 +118,62 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         })}
       </nav>
 
-      {/* Collapse toggle */}
-      <div className="border-t border-border p-3">
+      {/* User + Logout */}
+      <div className="border-t border-border p-3 space-y-1">
+        {!collapsed && (
+          <div className="flex items-center gap-2 rounded-lg px-3 py-2">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+              {currentUser?.name?.[0] ?? "A"}
+            </div>
+            <span className="truncate text-xs font-medium text-foreground">
+              {currentUser?.name ?? "Usuario"}
+            </span>
+          </div>
+        )}
+        {collapsed ? (
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  className="w-full text-muted-foreground hover:text-destructive"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              }
+            />
+            <TooltipContent side="right" sideOffset={8}>
+              Cerrar sesión
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            className="w-full justify-start text-muted-foreground hover:text-destructive"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="ml-2 text-xs">Cerrar sesión</span>
+          </Button>
+        )}
+
+        {/* Collapse toggle */}
         <Button
           variant="ghost"
           size="sm"
           onClick={onToggle}
           className={cn(
             "w-full justify-center text-muted-foreground hover:text-foreground",
-            !collapsed && "justify-start"
+            !collapsed && "justify-start",
           )}
         >
           <ChevronLeft
             className={cn(
               "h-4 w-4 transition-transform duration-300",
-              collapsed && "rotate-180"
+              collapsed && "rotate-180",
             )}
           />
           {!collapsed && <span className="ml-2 text-xs">Ocultar</span>}

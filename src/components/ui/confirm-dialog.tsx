@@ -25,20 +25,20 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
-  confirmLabel = "Delete",
+  confirmLabel = "Eliminar",
   onConfirm,
   destructive = true,
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-96">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant={destructive ? "destructive" : "default"}
@@ -47,7 +47,7 @@ export function ConfirmDialog({
               onOpenChange(false);
             }}
           >
-            {confirmLabel}
+            Confirmar
           </Button>
         </DialogFooter>
       </DialogContent>

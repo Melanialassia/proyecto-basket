@@ -11,8 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CourtVision — Basketball Analytics",
-  description: "Professional basketball analytics dashboard for teams, players, and game performance tracking.",
+  title: "CourtVision — Estadísticas de Baloncesto",
+  description:
+    "Panel de estadísticas de baloncesto para equipos, jugadores y seguimiento del rendimiento.",
 };
 
 export default function RootLayout({
@@ -21,11 +22,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="es" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full bg-background font-sans">
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster position="bottom-right" richColors closeButton />
       </body>
     </html>

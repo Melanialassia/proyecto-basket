@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AppSidebar } from "./app-sidebar";
 import { Topbar } from "./topbar";
+import { useAuthStore } from "@/store/auth";
 import { cn } from "@/lib/utils";
 
 interface DashboardShellProps {
@@ -10,7 +12,23 @@ interface DashboardShellProps {
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
+  const router = useRouter();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    // Espera a que Zustand hidrate el store desde localStorage
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [hydrated, isAuthenticated, router]);
+
+  if (!hydrated || !isAuthenticated) return null;
 
   return (
     <div className="flex min-h-screen">
@@ -26,7 +44,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <div
         className={cn(
           "flex flex-1 flex-col transition-all duration-300",
-          sidebarCollapsed ? "lg:ml-[68px]" : "lg:ml-[240px]"
+          sidebarCollapsed ? "lg:ml-17" : "lg:ml-60",
         )}
       >
         <Topbar />

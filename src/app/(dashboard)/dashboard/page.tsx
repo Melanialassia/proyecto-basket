@@ -29,10 +29,7 @@ export default function DashboardPage() {
 
   const completedGames = games.filter((g) => g.status === "completado");
   const totalWins = teams.reduce((sum, t) => sum + t.wins, 0);
-  const totalGamesPlayed = teams.reduce(
-    (sum, t) => sum + t.wins + t.losses,
-    0
-  );
+  const totalGamesPlayed = teams.reduce((sum, t) => sum + t.wins + t.losses, 0);
   const avgWinRate =
     totalGamesPlayed > 0
       ? ((totalWins / totalGamesPlayed) * 100).toFixed(1)
@@ -45,12 +42,12 @@ export default function DashboardPage() {
   const recentUploads = [...uploads]
     .sort(
       (a, b) =>
-        new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+        new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime(),
     )
     .slice(0, 4);
 
   const getTeamName = (teamId: string) =>
-    teams.find((t) => t.id === teamId)?.name ?? "Unknown";
+    teams.find((t) => t.id === teamId)?.name ?? "Desconocido";
   const getTeamAbbr = (teamId: string) =>
     teams.find((t) => t.id === teamId)?.abbreviation ?? "???";
 
@@ -98,10 +95,10 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Add Team
+                  Agregar equipo
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Create a new team
+                  Crea un nuevo equipo
                 </p>
               </div>
             </CardContent>
@@ -115,16 +112,16 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Add Player
+                  Agregar jugador
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Register a player
+                  Registra un jugador
                 </p>
               </div>
             </CardContent>
           </Card>
         </Link>
-        <Link href="/uploads" className="group">
+        {/* <Link href="/uploads" className="group">
           <Card className="border border-border bg-card transition-all hover:border-primary/30 hover:shadow-md">
             <CardContent className="flex items-center gap-4 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
@@ -132,14 +129,14 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Upload Stats
+                  Subir Estadísticas
                 </p>
                 <p className="text-xs text-muted-foreground">Subir PDF</p>
               </div>
             </CardContent>
           </Card>
         </Link>
-        <Link href="/analytics" className="group">
+        <Link href="/Estadísticas" className="group">
           <Card className="border border-border bg-card transition-all hover:border-primary/30 hover:shadow-md">
             <CardContent className="flex items-center gap-4 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
@@ -147,26 +144,26 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Analytics
+                  Estadísticas
                 </p>
                 <p className="text-xs text-muted-foreground">Ver métricas</p>
               </div>
             </CardContent>
           </Card>
-        </Link>
+        </Link> */}
       </div>
 
       {/* Content Grid */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Games */}
-        <Card className="border border-border bg-card shadow-sm">
+        {/* Juegos recientes */}
+        <Card className="border border-border bg-card shadow-sm col-span-full">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">
-              Recent Games
+              Juegos recientes
             </CardTitle>
             <Link href="/games">
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
-                View all
+                Ver todos
                 <ArrowRight className="h-3 w-3" />
               </Button>
             </Link>
@@ -205,15 +202,15 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Recent Uploads */}
-        <Card className="border border-border bg-card shadow-sm">
+        {/* Cargas recientes */}
+        {/* <Card className="border border-border bg-card shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">
-              Recent Uploads
+              Cargas recientes
             </CardTitle>
             <Link href="/uploads">
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
-                View all
+                Ver todos
                 <ArrowRight className="h-3 w-3" />
               </Button>
             </Link>
@@ -241,7 +238,7 @@ export default function DashboardPage() {
               </div>
             ))}
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

@@ -38,12 +38,12 @@ export default function GameDetailPage({
         <Link href="/games">
           <Button variant="ghost" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to Games
+            Volver a Partidos
           </Button>
         </Link>
         <EmptyState
-          title="Game not found"
-          description="The game you're looking for doesn't exist."
+          title="Partido no encontrado"
+          description="El partido que buscas no existe."
         />
       </div>
     );
@@ -57,7 +57,7 @@ export default function GameDetailPage({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex items-center gap-4">
         <Link href="/games">
           <Button variant="ghost" size="icon">
@@ -65,18 +65,18 @@ export default function GameDetailPage({
           </Button>
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Game Detail</h2>
+          <h2 className="text-2xl font-bold text-foreground">Detalle del Partido</h2>
           <p className="text-sm text-muted-foreground">
             {formatDate(game.date)} · {game.venue} · {season?.name}
           </p>
         </div>
       </div>
 
-      {/* Score Summary */}
+      {/* Resumen del marcador */}
       <Card className="border border-border bg-card shadow-sm">
         <CardContent className="p-8">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center">
-            {/* Home Team */}
+            {/* Equipo Local */}
             <div className="flex flex-col items-center gap-2">
               <div
                 className="flex h-16 w-16 items-center justify-center rounded-2xl text-xl font-bold text-white"
@@ -87,10 +87,10 @@ export default function GameDetailPage({
               <p className="text-sm font-semibold text-foreground">
                 {homeTeam?.name}
               </p>
-              <p className="text-xs text-muted-foreground">Home</p>
+              <p className="text-xs text-muted-foreground">Local</p>
             </div>
 
-            {/* Score */}
+            {/* Marcador */}
             <div className="flex items-center gap-4">
               <span className="text-5xl font-bold text-foreground">
                 {game.status === "completado" ? game.homeScore : "—"}
@@ -101,7 +101,7 @@ export default function GameDetailPage({
               </span>
             </div>
 
-            {/* Away Team */}
+            {/* Equipo Visitante */}
             <div className="flex flex-col items-center gap-2">
               <div
                 className="flex h-16 w-16 items-center justify-center rounded-2xl text-xl font-bold text-white"
@@ -112,7 +112,7 @@ export default function GameDetailPage({
               <p className="text-sm font-semibold text-foreground">
                 {awayTeam?.name}
               </p>
-              <p className="text-xs text-muted-foreground">Away</p>
+              <p className="text-xs text-muted-foreground">Visitante</p>
             </div>
           </div>
 
@@ -122,9 +122,9 @@ export default function GameDetailPage({
         </CardContent>
       </Card>
 
-      {/* Box Score */}
+      {/* Plantel */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Home Team Box Score */}
+        {/* Plantel Local */}
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
@@ -134,7 +134,7 @@ export default function GameDetailPage({
               >
                 {homeTeam?.abbreviation}
               </div>
-              {homeTeam?.name} Roster
+              Plantel {homeTeam?.name}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -173,7 +173,7 @@ export default function GameDetailPage({
           </CardContent>
         </Card>
 
-        {/* Away Team Box Score */}
+        {/* Plantel Visitante */}
         <Card className="border border-border bg-card shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
@@ -183,7 +183,7 @@ export default function GameDetailPage({
               >
                 {awayTeam?.abbreviation}
               </div>
-              {awayTeam?.name} Roster
+              Plantel {awayTeam?.name}
             </CardTitle>
           </CardHeader>
           <CardContent>

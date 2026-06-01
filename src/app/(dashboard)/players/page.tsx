@@ -50,7 +50,11 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { usePlayersStore } from "@/store/players";
 import { useTeamsStore } from "@/store/teams";
-import { playerSchema, type PlayerSchemaType, type PlayerFormInput } from "@/lib/schemas";
+import {
+  playerSchema,
+  type PlayerSchemaType,
+  type PlayerFormInput,
+} from "@/lib/schemas";
 import type { Player } from "@/types";
 
 export default function PlayersPage() {
@@ -78,12 +82,11 @@ export default function PlayersPage() {
   });
 
   const filteredPlayers = players.filter((player) => {
-    const matchesSearch =
-      `${player.firstName} ${player.lastName}`
-        .toLowerCase()
-        .includes(search.toLowerCase());
-    const matchesTeam =
-      teamFilter === "all" || player.teamId === teamFilter;
+    console.log("AA",player)
+    const matchesSearch = `${player.firstName} ${player.lastName}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesTeam = teamFilter === "all" || player.teamId === teamFilter;
     const matchesPosition =
       positionFilter === "all" || player.position === positionFilter;
     return matchesSearch && matchesTeam && matchesPosition;
@@ -134,13 +137,13 @@ export default function PlayersPage() {
   const handleDelete = () => {
     if (deleteTarget) {
       deletePlayer(deleteTarget.id);
-      toast.success("Player deleted successfully");
+      toast.success("Jugador eliminado exitosamente");
       setDeleteTarget(null);
     }
   };
 
   const getTeamName = (teamId: string) =>
-    teams.find((t) => t.id === teamId)?.name ?? "Unknown";
+    teams.find((t) => t.id === teamId)?.name ?? "Desconocido";
 
   const getTeamColor = (teamId: string) =>
     teams.find((t) => t.id === teamId)?.logoColor ?? "#94A3B8";
@@ -148,63 +151,93 @@ export default function PlayersPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Players"
-        description="Manage player roster and statistics"
-        actionLabel="Add Player"
+        title="Jugadores"
+        description="Gestiona el plantel de jugadores y estadísticas"
+        actionLabel="Agregar jugador"
         actionIcon={Plus}
         onAction={openCreate}
       />
 
-      {/* Filters */}
+      {/* Filtros */}
       <Card className="border border-border bg-card shadow-sm">
-        <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Buscar jugadores..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
+        <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-end">
+          <div className="flex flex-1 flex-col gap-1.5">
+            <Label className="text-xs text-muted-foreground">Buscar jugador</Label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar jugadores..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
           </div>
-          <Select value={teamFilter} onValueChange={(val) => setTeamFilter(val ?? "all")}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Team" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Teams</SelectItem>
-              {teams.map((team) => (
-                <SelectItem key={team.id} value={team.id}>
-                  {team.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={positionFilter} onValueChange={(val) => setPositionFilter(val ?? "all")}>
-            <SelectTrigger className="w-full sm:w-[140px]">
-              <SelectValue placeholder="Position" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Positions</SelectItem>
-              <SelectItem value="PG">PG</SelectItem>
-              <SelectItem value="SG">SG</SelectItem>
-              <SelectItem value="SF">SF</SelectItem>
-              <SelectItem value="PF">PF</SelectItem>
-              <SelectItem value="C">C</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col gap-1.5">
+            <Label className="text-xs text-muted-foreground">Filtrar por equipo</Label>
+            <Select
+              value={teamFilter}
+              onValueChange={(val) => setTeamFilter(val ?? "all")}
+            >
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Todos los equipos">
+                  {teamFilter === "all"
+                    ? "Todos los equipos"
+                    : (teams.find((t) => t.id === teamFilter)?.name ?? "Todos los equipos")}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los equipos</SelectItem>
+                {teams.map((team) => (
+                  <SelectItem key={team.id} value={team.id}>
+                    {team.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label className="text-xs text-muted-foreground">Filtrar por posición</Label>
+            <Select
+              value={positionFilter}
+              onValueChange={(val) => setPositionFilter(val ?? "all")}
+            >
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Todas las posiciones">
+                  {(
+                    {
+                      all: "Todas las posiciones",
+                      PG: "Base (PG)",
+                      SG: "Escolta (SG)",
+                      SF: "Alero (SF)",
+                      PF: "Ala-Pívot (PF)",
+                      C: "Pívot (C)",
+                    } as Record<string, string>
+                  )[positionFilter] ?? "Todas las posiciones"}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas las posiciones</SelectItem>
+                <SelectItem value="PG">Base (PG)</SelectItem>
+                <SelectItem value="SG">Escolta (SG)</SelectItem>
+                <SelectItem value="SF">Alero (SF)</SelectItem>
+                <SelectItem value="PF">Ala-Pívot (PF)</SelectItem>
+                <SelectItem value="C">Pívot (C)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Table */}
+      {/* Tabla */}
       {filteredPlayers.length === 0 ? (
         <EmptyState
-          title="No players found"
-          description="Get started by adding your first player."
+          title="No se encontraron jugadores"
+          description="Comienza agregando tu primer jugador."
         >
           <Button onClick={openCreate} className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Player
+            Agregar jugador
           </Button>
         </EmptyState>
       ) : (
@@ -277,20 +310,22 @@ export default function PlayersPage() {
                         }
                       />
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem render={<Link href={`/players/${player.id}`} />}>
+                        <DropdownMenuItem
+                          render={<Link href={`/players/${player.id}`} />}
+                        >
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          Ver
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openEdit(player)}>
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeleteTarget(player)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -302,19 +337,19 @@ export default function PlayersPage() {
         </Card>
       )}
 
-      {/* Create/Edit Dialog */}
+      {/* Diálogo Crear/Editar */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>
-              {editingPlayer ? "Edit Player" : "Add Player"}
+              {editingPlayer ? "Editar Jugador" : "Agregar jugador"}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Nombre</Label>
-                <Input {...form.register("firstName")} placeholder="Marcus" />
+                <Input {...form.register("firstName")} placeholder="Marcos" />
                 {form.formState.errors.firstName && (
                   <p className="text-xs text-destructive">
                     {form.formState.errors.firstName.message}
@@ -323,7 +358,7 @@ export default function PlayersPage() {
               </div>
               <div className="space-y-2">
                 <Label>Apellido</Label>
-                <Input {...form.register("lastName")} placeholder="Johnson" />
+                <Input {...form.register("lastName")} placeholder="García" />
                 {form.formState.errors.lastName && (
                   <p className="text-xs text-destructive">
                     {form.formState.errors.lastName.message}
@@ -336,10 +371,14 @@ export default function PlayersPage() {
                 <Label>Equipo</Label>
                 <Select
                   value={form.watch("teamId")}
-                  onValueChange={(val) => { if (val) form.setValue("teamId", val); }}
+                  onValueChange={(val) => {
+                    if (val) form.setValue("teamId", val);
+                  }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select team" />
+                    <SelectValue placeholder="Seleccionar equipo">
+                      {teams.find((t) => t.id === form.watch("teamId"))?.name ?? "Seleccionar equipo"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {teams.map((team) => (
@@ -360,21 +399,32 @@ export default function PlayersPage() {
                 <Select
                   value={form.watch("position")}
                   onValueChange={(val) => {
-                    if (val) form.setValue(
-                      "position",
-                      val as "PG" | "SG" | "SF" | "PF" | "C"
-                    )
+                    if (val)
+                      form.setValue(
+                        "position",
+                        val as "PG" | "SG" | "SF" | "PF" | "C",
+                      );
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Seleccionar posición">
+                      {
+                        {
+                          PG: "Base (PG)",
+                          SG: "Escolta (SG)",
+                          SF: "Alero (SF)",
+                          PF: "Ala-Pívot (PF)",
+                          C: "Pívot (C)",
+                        }[form.watch("position")]
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="PG">Point Guard (PG)</SelectItem>
-                    <SelectItem value="SG">Shooting Guard (SG)</SelectItem>
-                    <SelectItem value="SF">Small Forward (SF)</SelectItem>
-                    <SelectItem value="PF">Power Forward (PF)</SelectItem>
-                    <SelectItem value="C">Center (C)</SelectItem>
+                    <SelectItem value="PG">Base (PG)</SelectItem>
+                    <SelectItem value="SG">Escolta (SG)</SelectItem>
+                    <SelectItem value="SF">Alero (SF)</SelectItem>
+                    <SelectItem value="PF">Ala-Pívot (PF)</SelectItem>
+                    <SelectItem value="C">Pívot (C)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -396,10 +446,7 @@ export default function PlayersPage() {
               </div>
               <div className="space-y-2">
                 <Label>Altura</Label>
-                <Input
-                  {...form.register("height")}
-                  placeholder={`6'5"`}
-                />
+                <Input {...form.register("height")} placeholder={`1.98m`} />
               </div>
               <div className="space-y-2">
                 <Label>Edad</Label>
@@ -412,7 +459,7 @@ export default function PlayersPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Weight (lbs)</Label>
+              <Label>Peso (kg)</Label>
               <Input
                 {...form.register("weight", { valueAsNumber: true })}
                 type="number"
@@ -430,22 +477,22 @@ export default function PlayersPage() {
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit">
-                {editingPlayer ? "Update" : "Create"}
+                {editingPlayer ? "Actualizar" : "Crear"}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Confirmación de eliminación */}
       <ConfirmDialog
         open={!!deleteTarget}
         onOpenChange={() => setDeleteTarget(null)}
-        title="Delete Player"
-        description={`Are you sure you want to delete "${deleteTarget?.firstName} ${deleteTarget?.lastName}"? This action cannot be undone.`}
+        title="Eliminar Jugador"
+        description={`¿Estás seguro de que quieres eliminar a "${deleteTarget?.firstName} ${deleteTarget?.lastName}"? Esta acción no se puede deshacer.`}
         onConfirm={handleDelete}
       />
     </div>

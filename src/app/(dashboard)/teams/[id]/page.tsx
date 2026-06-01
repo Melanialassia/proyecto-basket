@@ -43,12 +43,12 @@ export default function TeamDetailPage({
         <Link href="/teams">
           <Button variant="ghost" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to Teams
+            Volver a Equipos
           </Button>
         </Link>
         <EmptyState
-          title="Team not found"
-          description="The team you're looking for doesn't exist."
+          title="Equipo no encontrado"
+          description="El equipo que buscas no existe."
         />
       </div>
     );
@@ -83,7 +83,7 @@ export default function TeamDetailPage({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex items-center gap-4">
         <Link href="/teams">
           <Button variant="ghost" size="icon">
@@ -102,7 +102,7 @@ export default function TeamDetailPage({
               {team.city} {team.name}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {team.conference} Conference · {team.division} Division
+              Conferencia {team.conference} · División {team.division}
             </p>
           </div>
         </div>
@@ -111,29 +111,29 @@ export default function TeamDetailPage({
       {/* KPI Cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
-          title="Record"
+          title="Récord"
           value={`${team.wins}-${team.losses}`}
           icon={Trophy}
         />
-        <KPICard title="Avg PPG" value={avgPPG} icon={Trophy} />
-        <KPICard title="Avg RPG" value={avgRPG} icon={Trophy} />
-        <KPICard title="Avg APG" value={avgAPG} icon={Trophy} />
+        <KPICard title="Prom PPG" value={avgPPG} icon={Trophy} />
+        <KPICard title="Prom RPG" value={avgRPG} icon={Trophy} />
+        <KPICard title="Prom APG" value={avgAPG} icon={Trophy} />
       </div>
 
-      {/* Tabs */}
+      {/* Pestañas */}
       <Tabs defaultValue="players" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="players">Players ({players.length})</TabsTrigger>
-          <TabsTrigger value="games">Games ({games.length})</TabsTrigger>
-          <TabsTrigger value="stats">Stats</TabsTrigger>
+          <TabsTrigger value="players">Jugadores ({players.length})</TabsTrigger>
+          <TabsTrigger value="games">Partidos ({games.length})</TabsTrigger>
+          <TabsTrigger value="stats">Estadísticas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="players">
           {players.length === 0 ? (
             <EmptyState
               icon={Users}
-              title="No players"
-              description="This team doesn't have any players yet."
+              title="Sin jugadores"
+              description="Este equipo aún no tiene jugadores."
             />
           ) : (
             <Card className="border border-border bg-card shadow-sm">
@@ -190,8 +190,8 @@ export default function TeamDetailPage({
           {games.length === 0 ? (
             <EmptyState
               icon={Trophy}
-              title="No games"
-              description="No games found for this team."
+              title="Sin partidos"
+              description="No se encontraron partidos para este equipo."
             />
           ) : (
             <Card className="border border-border bg-card shadow-sm">
@@ -199,9 +199,9 @@ export default function TeamDetailPage({
                 <TableHeader>
                   <TableRow>
                     <TableHead>Fecha</TableHead>
-                    <TableHead>Opponent</TableHead>
-                    <TableHead>Score</TableHead>
-                    <TableHead>Result</TableHead>
+                    <TableHead>Rival</TableHead>
+                    <TableHead>Marcador</TableHead>
+                    <TableHead>Resultado</TableHead>
                     <TableHead>Sede</TableHead>
                     <TableHead>Estado</TableHead>
                   </TableRow>
@@ -239,7 +239,7 @@ export default function TeamDetailPage({
                                 won ? "text-emerald-600" : "text-red-500"
                               }
                             >
-                              {won ? "W" : "L"}
+                              {won ? "G" : "P"}
                             </span>
                           )}
                         </TableCell>
@@ -261,37 +261,37 @@ export default function TeamDetailPage({
         <TabsContent value="stats">
           <Card className="border border-border bg-card p-6 shadow-sm">
             <CardHeader className="px-0 pt-0">
-              <CardTitle className="text-base">Team Statistics</CardTitle>
+              <CardTitle className="text-base">Estadísticas del Equipo</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-6 px-0 sm:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-xl border border-border bg-muted/30 p-4">
-                <p className="text-sm text-muted-foreground">Win Percentage</p>
+                <p className="text-sm text-muted-foreground">Porcentaje de Victorias</p>
                 <p className="mt-1 text-2xl font-bold">
                   {getWinPercentage(team.wins, team.losses)}
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-muted/30 p-4">
                 <p className="text-sm text-muted-foreground">
-                  Total Games Played
+                  Total de Partidos Jugados
                 </p>
                 <p className="mt-1 text-2xl font-bold">
                   {team.wins + team.losses}
                 </p>
               </div>
               <div className="rounded-xl border border-border bg-muted/30 p-4">
-                <p className="text-sm text-muted-foreground">Roster Size</p>
+                <p className="text-sm text-muted-foreground">Tamaño del Plantel</p>
                 <p className="mt-1 text-2xl font-bold">{players.length}</p>
               </div>
               <div className="rounded-xl border border-border bg-muted/30 p-4">
-                <p className="text-sm text-muted-foreground">Team PPG</p>
+                <p className="text-sm text-muted-foreground">Puntos por Partido</p>
                 <p className="mt-1 text-2xl font-bold">{avgPPG}</p>
               </div>
               <div className="rounded-xl border border-border bg-muted/30 p-4">
-                <p className="text-sm text-muted-foreground">Team RPG</p>
+                <p className="text-sm text-muted-foreground">Rebotes por Partido</p>
                 <p className="mt-1 text-2xl font-bold">{avgRPG}</p>
               </div>
               <div className="rounded-xl border border-border bg-muted/30 p-4">
-                <p className="text-sm text-muted-foreground">Team APG</p>
+                <p className="text-sm text-muted-foreground">Asistencias por Partido</p>
                 <p className="mt-1 text-2xl font-bold">{avgAPG}</p>
               </div>
             </CardContent>

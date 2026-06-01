@@ -5,7 +5,11 @@ import { mockUploads } from "@/mock/data";
 interface UploadsState {
   uploads: Upload[];
   addUpload: (fileName: string, fileSize: number) => string;
-  updateUploadStatus: (id: string, status: UploadStatus, progress: number) => void;
+  updateUploadStatus: (
+    id: string,
+    status: UploadStatus,
+    progress: number,
+  ) => void;
   updateUploadError: (id: string, error: string) => void;
   deleteUpload: (id: string) => void;
   simulateUpload: (id: string) => void;
@@ -35,7 +39,7 @@ export const useUploadsStore = create<UploadsState>((set, get) => ({
   updateUploadStatus: (id, status, progress) =>
     set((state) => ({
       uploads: state.uploads.map((upload) =>
-        upload.id === id ? { ...upload, status, progress } : upload
+        upload.id === id ? { ...upload, status, progress } : upload,
       ),
     })),
 
@@ -44,7 +48,7 @@ export const useUploadsStore = create<UploadsState>((set, get) => ({
       uploads: state.uploads.map((upload) =>
         upload.id === id
           ? { ...upload, status: "fallido" as UploadStatus, error, progress: 0 }
-          : upload
+          : upload,
       ),
     })),
 
@@ -68,7 +72,7 @@ export const useUploadsStore = create<UploadsState>((set, get) => ({
         clearInterval(uploadInterval);
         updateUploadStatus(id, "procesando", 100);
 
-        // Simulate processing
+        // Simulate Cargando
         setTimeout(() => {
           const success = Math.random() > 0.15; // 85% success rate
           if (success) {
@@ -80,10 +84,11 @@ export const useUploadsStore = create<UploadsState>((set, get) => ({
                   ? {
                       ...upload,
                       status: "fallido" as UploadStatus,
-                      error: "El procesamiento falló: no se pudo analizar el documento",
+                      error:
+                        "El procesamiento falló: no se pudo analizar el documento",
                       progress: 0,
                     }
-                  : upload
+                  : upload,
               ),
             }));
           }

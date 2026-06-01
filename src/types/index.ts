@@ -1,5 +1,5 @@
 // ============================================
-// Basketball Analytics SaaS — Core Types
+// Basketball Estadísticas SaaS — Core Types
 // ============================================
 
 export interface Team {
@@ -65,7 +65,12 @@ export interface Game {
   createdAt: string;
 }
 
-export type UploadStatus = "inactivo" | "subiendo" | "procesando" | "éxito" | "fallido";
+export type UploadStatus =
+  | "inactivo"
+  | "subiendo"
+  | "procesando"
+  | "éxito"
+  | "fallido";
 
 export interface Upload {
   id: string;
@@ -86,7 +91,7 @@ export interface KPIMetric {
   icon: string;
 }
 
-export interface AnalyticsFilters {
+export interface EstadísticasFilters {
   teamId: string | null;
   seasonId: string | null;
   dateRange: [string, string] | null;

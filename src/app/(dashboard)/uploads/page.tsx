@@ -39,19 +39,19 @@ export default function UploadsPage() {
     (files: FileList) => {
       Array.from(files).forEach((file) => {
         if (file.type !== "application/pdf") {
-          toast.error(`"${file.name}" is not a PDF file.`);
+          toast.error(`"${file.name}" no es un archivo PDF.`);
           return;
         }
         if (file.size > MAX_FILE_SIZE) {
-          toast.error(`"${file.name}" exceeds the 20MB limit.`);
+          toast.error(`"${file.name}" supera el límite de 20MB.`);
           return;
         }
         const id = addUpload(file.name, file.size);
         simulateUpload(id);
-        toast.info(`Uploading "${file.name}"...`);
+        toast.info(`Subiendo "${file.name}"...`);
       });
     },
-    [addUpload, simulateUpload]
+    [addUpload, simulateUpload],
   );
 
   const handleDrop = useCallback(
@@ -62,7 +62,7 @@ export default function UploadsPage() {
         handleFiles(e.dataTransfer.files);
       }
     },
-    [handleFiles]
+    [handleFiles],
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -82,14 +82,14 @@ export default function UploadsPage() {
         e.target.value = "";
       }
     },
-    [handleFiles]
+    [handleFiles],
   );
 
   const activeUploads = uploads.filter(
-    (u) => u.status === "subiendo" || u.status === "procesando"
+    (u) => u.status === "subiendo" || u.status === "procesando",
   );
   const completedUploads = uploads.filter(
-    (u) => u.status === "éxito" || u.status === "fallido"
+    (u) => u.status === "éxito" || u.status === "fallido",
   );
 
   const getStatusIcon = (status: string) => {
@@ -122,27 +122,29 @@ export default function UploadsPage() {
           "relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-16 text-center transition-all",
           isDragging
             ? "border-primary bg-primary/5 scale-[1.01]"
-            : "border-border bg-card hover:border-primary/40 hover:bg-muted/30"
+            : "border-border bg-card hover:border-primary/40 hover:bg-muted/30",
         )}
       >
         <div
           className={cn(
             "mb-4 flex h-14 w-14 items-center justify-center rounded-2xl transition-colors",
-            isDragging ? "bg-primary/10" : "bg-muted"
+            isDragging ? "bg-primary/10" : "bg-muted",
           )}
         >
           <Upload
             className={cn(
               "h-6 w-6 transition-colors",
-              isDragging ? "text-primary" : "text-muted-foreground"
+              isDragging ? "text-primary" : "text-muted-foreground",
             )}
           />
         </div>
         <h3 className="mb-1 text-base font-semibold text-foreground">
-          {isDragging ? "Suelta los archivos aquí" : "Arrastra y suelta archivos PDF"}
+          {isDragging
+            ? "Suelta los archivos aquí"
+            : "Arrastra y suelta archivos PDF"}
         </h3>
         <p className="mb-4 text-sm text-muted-foreground">
-          or click to browse · PDF only · Max 20MB
+          o haz clic para explorar · Solo PDF · Máx 20MB
         </p>
         <label>
           <input
@@ -152,7 +154,9 @@ export default function UploadsPage() {
             onChange={handleFileInput}
             className="hidden"
           />
-          <Button variant="outline" className="cursor-pointer" render={<span>Buscar Archivos</span>} />
+          <Button variant="outline" className="cursor-pointer">
+            Buscar Archivos
+          </Button>
         </label>
       </div>
 
@@ -162,7 +166,7 @@ export default function UploadsPage() {
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              Processing ({activeUploads.length})
+              Cargando ({activeUploads.length})
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -199,13 +203,13 @@ export default function UploadsPage() {
       {/* Upload History */}
       <Card className="border border-border bg-card shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Upload History</CardTitle>
+          <CardTitle className="text-base">Historial de Subidas</CardTitle>
         </CardHeader>
         <CardContent>
           {completedUploads.length === 0 ? (
             <div className="py-8 text-center">
               <p className="text-sm text-muted-foreground">
-                No completed uploads yet
+                Aún no hay subidas completadas
               </p>
             </div>
           ) : (

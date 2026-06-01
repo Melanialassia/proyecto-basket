@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, Search, MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
+import {
+  Plus,
+  Search,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Eye,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -118,7 +125,7 @@ export default function TeamsPage() {
   const handleDelete = () => {
     if (deleteTarget) {
       deleteTeam(deleteTarget.id);
-      toast.success("Team deleted successfully");
+      toast.success("Equipo eliminado exitosamente");
       setDeleteTarget(null);
     }
   };
@@ -129,14 +136,14 @@ export default function TeamsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Teams"
+        title="Equipos"
         description="Gestiona tus equipos de baloncesto"
-        actionLabel="Add Team"
+        actionLabel="Agregar equipo"
         actionIcon={Plus}
         onAction={openCreate}
       />
 
-      {/* Filters */}
+      {/* Filtros */}
       <Card className="border border-border bg-card shadow-sm">
         <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
           <div className="relative flex-1">
@@ -148,28 +155,39 @@ export default function TeamsPage() {
               className="pl-9"
             />
           </div>
-          <Select value={conferenceFilter} onValueChange={(val) => setConferenceFilter(val ?? "all")}>
+          <Select
+            value={conferenceFilter}
+            onValueChange={(val) => setConferenceFilter(val ?? "all")}
+          >
             <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Conference" />
+              <SelectValue placeholder="Todas las conferencias">
+                {(
+                  {
+                    all: "Todas las conferencias",
+                    Este: "Este",
+                    Oeste: "Oeste",
+                  } as Record<string, string>
+                )[conferenceFilter] ?? "Todas las conferencias"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Conferences</SelectItem>
-              <SelectItem value="Este">Eastern</SelectItem>
-              <SelectItem value="Oeste">Western</SelectItem>
+              <SelectItem value="all">Todas las conferencias</SelectItem>
+              <SelectItem value="Este">Este</SelectItem>
+              <SelectItem value="Oeste">Oeste</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
       </Card>
 
-      {/* Table */}
+      {/* Tabla */}
       {filteredTeams.length === 0 ? (
         <EmptyState
-          title="No teams found"
-          description="Get started by creating your first team."
+          title="No se encontraron equipos"
+          description="Comienza creando tu primer equipo."
         >
           <Button onClick={openCreate} className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Team
+            Agregar equipo
           </Button>
         </EmptyState>
       ) : (
@@ -182,8 +200,8 @@ export default function TeamsPage() {
                 <TableHead>Conferencia</TableHead>
                 <TableHead>División</TableHead>
                 <TableHead className="text-center">Jugadores</TableHead>
-                <TableHead className="text-center">Record</TableHead>
-                <TableHead className="text-center">Win %</TableHead>
+                <TableHead className="text-center">Récord</TableHead>
+                <TableHead className="text-center">% Victorias</TableHead>
                 <TableHead className="w-[50px]" />
               </TableRow>
             </TableHeader>
@@ -235,20 +253,22 @@ export default function TeamsPage() {
                         }
                       />
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem render={<Link href={`/teams/${team.id}`} />}>
+                        <DropdownMenuItem
+                          render={<Link href={`/teams/${team.id}`} />}
+                        >
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          Ver
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openEdit(team)}>
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeleteTarget(team)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -260,22 +280,19 @@ export default function TeamsPage() {
         </Card>
       )}
 
-      {/* Create/Edit Dialog */}
+      {/* Diálogo Crear/Editar */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>
-              {editingTeam ? "Edit Team" : "Crear Equipo"}
+              {editingTeam ? "Editar Equipo" : "Crear Equipo"}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Team Name</Label>
-                <Input
-                  {...form.register("name")}
-                  placeholder="Thunder Hawks"
-                />
+                <Label>Nombre del Equipo</Label>
+                <Input {...form.register("name")} placeholder="Halcones del Trueno" />
                 {form.formState.errors.name && (
                   <p className="text-xs text-destructive">
                     {form.formState.errors.name.message}
@@ -283,10 +300,10 @@ export default function TeamsPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Abbreviation</Label>
+                <Label>Abreviación</Label>
                 <Input
                   {...form.register("abbreviation")}
-                  placeholder="THK"
+                  placeholder="HT"
                   maxLength={4}
                 />
                 {form.formState.errors.abbreviation && (
@@ -299,7 +316,7 @@ export default function TeamsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Ciudad</Label>
-                <Input {...form.register("city")} placeholder="Austin" />
+                <Input {...form.register("city")} placeholder="Buenos Aires" />
                 {form.formState.errors.city && (
                   <p className="text-xs text-destructive">
                     {form.formState.errors.city.message}
@@ -308,10 +325,7 @@ export default function TeamsPage() {
               </div>
               <div className="space-y-2">
                 <Label>División</Label>
-                <Input
-                  {...form.register("division")}
-                  placeholder="Southwest"
-                />
+                <Input {...form.register("division")} placeholder="Sur" />
                 {form.formState.errors.division && (
                   <p className="text-xs text-destructive">
                     {form.formState.errors.division.message}
@@ -329,16 +343,18 @@ export default function TeamsPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Este">
+                      {form.watch("conference") === "Oeste" ? "Oeste" : "Este"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Este">Eastern</SelectItem>
-                    <SelectItem value="Oeste">Western</SelectItem>
+                    <SelectItem value="Este">Este</SelectItem>
+                    <SelectItem value="Oeste">Oeste</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Logo Color</Label>
+                <Label>Color del Logo</Label>
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
@@ -359,22 +375,20 @@ export default function TeamsPage() {
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                Cancelar
               </Button>
-              <Button type="submit">
-                {editingTeam ? "Update" : "Create"}
-              </Button>
+              <Button type="submit">{editingTeam ? "Actualizar" : "Crear"}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Confirmación de eliminación */}
       <ConfirmDialog
         open={!!deleteTarget}
         onOpenChange={() => setDeleteTarget(null)}
-        title="Delete Team"
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        title="Eliminar Equipo"
+        description={`¿Estás seguro de que quieres eliminar "${deleteTarget?.name}"? Esta acción no se puede deshacer.`}
         onConfirm={handleDelete}
       />
     </div>
