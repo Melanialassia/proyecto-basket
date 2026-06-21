@@ -82,7 +82,6 @@ export default function PlayersPage() {
   });
 
   const filteredPlayers = players.filter((player) => {
-    console.log("AA",player)
     const matchesSearch = `${player.firstName} ${player.lastName}`
       .toLowerCase()
       .includes(search.toLowerCase());

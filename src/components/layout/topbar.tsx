@@ -28,7 +28,7 @@ const navItems = [
   { href: "/seasons", label: "Temporadas", icon: Calendar },
   { href: "/games", label: "Partidos", icon: Trophy },
   { href: "/uploads", label: "Subidas", icon: Upload },
-  { href: "/Estadísticas", label: "Estadísticas", icon: BarChart3 },
+  { href: "/analytics", label: "Estadísticas", icon: BarChart3 },
 ];
 
 const pageTitles: Record<string, string> = {
@@ -38,7 +38,7 @@ const pageTitles: Record<string, string> = {
   "/seasons": "Temporadas",
   "/games": "Partidos",
   "/uploads": "Subidas",
-  "/Estadísticas": "Estadísticas",
+  "/analytics": "Estadísticas",
 };
 
 function getPageTitle(pathname: string): string {

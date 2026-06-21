@@ -30,8 +30,8 @@ const navItems = [
   { href: "/players", label: "Jugadores", icon: UserCircle },
   { href: "/seasons", label: "Temporadas", icon: Calendar },
   { href: "/games", label: "Partidos", icon: Trophy },
-  // { href: "/uploads", label: "Subidas", icon: Upload },
-  // { href: "/analytics", label: "Estadísticas", icon: BarChart3 },
+  { href: "/uploads", label: "Subidas", icon: Upload },
+  { href: "/analytics", label: "Estadísticas", icon: BarChart3 },
 ];
 
 interface AppSidebarProps {

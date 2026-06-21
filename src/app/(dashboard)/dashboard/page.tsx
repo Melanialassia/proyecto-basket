@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -10,6 +11,9 @@ import {
   ArrowRight,
   BarChart3,
   Plus,
+  FileText,
+  ExternalLink,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,14 +22,33 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { useTeamsStore } from "@/store/teams";
 import { usePlayersStore } from "@/store/players";
 import { useGamesStore } from "@/store/games";
-import { useUploadsStore } from "@/store/uploads";
-import { formatDate, formatFileSize } from "@/lib/utils";
+import { formatDate, formatFileSize, truncateFileName } from "@/lib/utils";
+
+interface RecentFile {
+  id: string;
+  fileName: string;
+  fileSize: number;
+  format: string;
+  teamId?: string;
+  cloudinaryUrl: string;
+  uploadedAt: string;
+}
 
 export default function DashboardPage() {
   const teams = useTeamsStore((s) => s.teams);
   const players = usePlayersStore((s) => s.players);
   const games = useGamesStore((s) => s.games);
-  const uploads = useUploadsStore((s) => s.uploads);
+
+  const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/upload/recent")
+      .then((r) => r.json())
+      .then((data) => setRecentFiles(data.files ?? []))
+      .catch(() => setRecentFiles([]))
+      .finally(() => setLoadingFiles(false));
+  }, []);
 
   const completedGames = games.filter((g) => g.status === "completado");
   const totalWins = teams.reduce((sum, t) => sum + t.wins, 0);
@@ -39,15 +62,8 @@ export default function DashboardPage() {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);
 
-  const recentUploads = [...uploads]
-    .sort(
-      (a, b) =>
-        new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime(),
-    )
-    .slice(0, 4);
-
-  const getTeamName = (teamId: string) =>
-    teams.find((t) => t.id === teamId)?.name ?? "Desconocido";
+  const getTeamName = (teamId?: string) =>
+    teams.find((t) => t.id === teamId)?.name ?? "—";
   const getTeamAbbr = (teamId: string) =>
     teams.find((t) => t.id === teamId)?.abbreviation ?? "???";
 
@@ -94,12 +110,8 @@ export default function DashboardPage() {
                 <Plus className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">
-                  Agregar equipo
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Crea un nuevo equipo
-                </p>
+                <p className="text-sm font-medium text-foreground">Agregar equipo</p>
+                <p className="text-xs text-muted-foreground">Crea un nuevo equipo</p>
               </div>
             </CardContent>
           </Card>
@@ -111,56 +123,46 @@ export default function DashboardPage() {
                 <Plus className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">
-                  Agregar jugador
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Registra un jugador
-                </p>
+                <p className="text-sm font-medium text-foreground">Agregar jugador</p>
+                <p className="text-xs text-muted-foreground">Registra un jugador</p>
               </div>
             </CardContent>
           </Card>
         </Link>
-        {/* <Link href="/uploads" className="group">
+        <Link href="/uploads" className="group">
           <Card className="border border-border bg-card transition-all hover:border-primary/30 hover:shadow-md">
             <CardContent className="flex items-center gap-4 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
                 <Upload className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">
-                  Subir Estadísticas
-                </p>
+                <p className="text-sm font-medium text-foreground">Subir Estadísticas</p>
                 <p className="text-xs text-muted-foreground">Subir PDF</p>
               </div>
             </CardContent>
           </Card>
         </Link>
-        <Link href="/Estadísticas" className="group">
+        <Link href="/analytics" className="group">
           <Card className="border border-border bg-card transition-all hover:border-primary/30 hover:shadow-md">
             <CardContent className="flex items-center gap-4 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                 <BarChart3 className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">
-                  Estadísticas
-                </p>
+                <p className="text-sm font-medium text-foreground">Estadísticas</p>
                 <p className="text-xs text-muted-foreground">Ver métricas</p>
               </div>
             </CardContent>
           </Card>
-        </Link> */}
+        </Link>
       </div>
 
       {/* Content Grid */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Juegos recientes */}
-        <Card className="border border-border bg-card shadow-sm col-span-full">
+        <Card className="border border-border bg-card shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-base font-semibold">
-              Juegos recientes
-            </CardTitle>
+            <CardTitle className="text-base font-semibold">Juegos recientes</CardTitle>
             <Link href="/games">
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
                 Ver todos
@@ -175,22 +177,16 @@ export default function DashboardPage() {
                 className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3"
               >
                 <div className="flex items-center gap-3">
-                  <div className="text-center">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      {formatDate(game.date)}
-                    </p>
-                  </div>
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {formatDate(game.date)}
+                  </p>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-foreground">
                       {getTeamAbbr(game.homeTeamId)}
                     </span>
-                    <span className="text-lg font-bold text-foreground">
-                      {game.homeScore}
-                    </span>
+                    <span className="text-lg font-bold text-foreground">{game.homeScore}</span>
                     <span className="text-xs text-muted-foreground">vs</span>
-                    <span className="text-lg font-bold text-foreground">
-                      {game.awayScore}
-                    </span>
+                    <span className="text-lg font-bold text-foreground">{game.awayScore}</span>
                     <span className="text-sm font-semibold text-foreground">
                       {getTeamAbbr(game.awayTeamId)}
                     </span>
@@ -203,11 +199,9 @@ export default function DashboardPage() {
         </Card>
 
         {/* Cargas recientes */}
-        {/* <Card className="border border-border bg-card shadow-sm">
+        <Card className="border border-border bg-card shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-base font-semibold">
-              Cargas recientes
-            </CardTitle>
+            <CardTitle className="text-base font-semibold">Cargas recientes</CardTitle>
             <Link href="/uploads">
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
                 Ver todos
@@ -216,29 +210,62 @@ export default function DashboardPage() {
             </Link>
           </CardHeader>
           <CardContent className="space-y-3">
-            {recentUploads.map((upload) => (
-              <div
-                key={upload.id}
-                className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500">
-                    <Upload className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      {upload.fileName}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatFileSize(upload.fileSize)}
-                    </p>
-                  </div>
-                </div>
-                <StatusBadge status={upload.status} />
+            {loadingFiles ? (
+              <div className="flex items-center justify-center gap-2 py-6 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Cargando...</span>
               </div>
-            ))}
+            ) : recentFiles.length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="text-sm text-muted-foreground">No hay archivos subidos aún</p>
+              </div>
+            ) : (
+              recentFiles.map((file) => {
+                const isImage = ["jpg", "jpeg", "png", "webp", "gif"].includes(file.format);
+                return (
+                  <div
+                    key={file.id}
+                    className="group flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      {isImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={file.cloudinaryUrl}
+                          alt={file.fileName}
+                          className="h-9 w-9 rounded object-cover border border-border shrink-0"
+                        />
+                      ) : (
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
+                          <FileText className="h-4 w-4" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p
+                          className="text-sm font-medium text-foreground"
+                          title={file.fileName}
+                        >
+                          {truncateFileName(file.fileName)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {getTeamName(file.teamId)} · {formatFileSize(file.fileSize)}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100 text-primary"
+                      onClick={() => window.open(file.cloudinaryUrl, "_blank")}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </div>
+                );
+              })
+            )}
           </CardContent>
-        </Card> */}
+        </Card>
       </div>
     </div>
   );

@@ -78,7 +78,9 @@ export interface Upload {
   fileSize: number;
   status: UploadStatus;
   progress: number;
+  teamId?: string;
   gameId?: string;
+  cloudinaryUrl?: string;
   error?: string;
   uploadedAt: string;
 }

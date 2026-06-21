@@ -33,6 +33,14 @@ export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+
+export function truncateFileName(name: string, max = 20): string {
+  if (name.length <= max) return name;
+  const dot = name.lastIndexOf(".");
+  const ext = dot !== -1 ? name.slice(dot) : "";
+  return name.slice(0, max - ext.length - 1) + "…" + ext;
+}
+
 export function getWinPercentage(wins: number, losses: number): string {
   const total = wins + losses;
   if (total === 0) return ".000";

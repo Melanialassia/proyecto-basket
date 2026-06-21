@@ -375,41 +375,4 @@ export const mockGames: Game[] = [
 // ============================================
 // Uploads Mock Data
 // ============================================
-export const mockUploads: Upload[] = [
-  {
-    id: "upload-1",
-    fileName: "reporte_estadisticas_partido1.pdf",
-    fileSize: 2048576,
-    status: "éxito",
-    progress: 100,
-    gameId: "game-1",
-    uploadedAt: "2025-03-15T18:30:00Z",
-  },
-  {
-    id: "upload-2",
-    fileName: "marcador_partido2.pdf",
-    fileSize: 1536000,
-    status: "éxito",
-    progress: 100,
-    gameId: "game-2",
-    uploadedAt: "2025-03-14T20:15:00Z",
-  },
-  {
-    id: "upload-3",
-    fileName: "analisis_partido3.pdf",
-    fileSize: 3145728,
-    status: "procesando",
-    progress: 65,
-    gameId: "game-3",
-    uploadedAt: "2025-03-13T19:45:00Z",
-  },
-  {
-    id: "upload-4",
-    fileName: "resumen_temporada_equipo.pdf",
-    fileSize: 5242880,
-    status: "fallido",
-    progress: 0,
-    error: "Formato de archivo no soportado",
-    uploadedAt: "2025-03-12T14:00:00Z",
-  },
-];
+export const mockUploads: Upload[] = [];
